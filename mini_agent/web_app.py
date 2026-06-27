@@ -297,13 +297,21 @@ HTML = r"""<!doctype html>
       const box = qs("#messages");
       box.innerHTML = "";
       for (const message of messages) {
-        const div = document.createElement("div");
-        div.className = `msg ${message.role}`;
-        const label = message.name ? `${message.role}:${message.name}` : message.role;
-        div.textContent = `${label}\n${message.content}`;
-        box.appendChild(div);
+        appendMessage(message, false);
       }
       box.scrollTop = box.scrollHeight;
+    }
+
+    function appendMessage(message, scroll = true) {
+      const box = qs("#messages");
+      const div = document.createElement("div");
+      div.className = `msg ${message.role}`;
+      if (message.pending) div.style.opacity = "0.72";
+      const label = message.name ? `${message.role}:${message.name}` : message.role;
+      div.textContent = `${label}\n${message.content}`;
+      box.appendChild(div);
+      if (scroll) box.scrollTop = box.scrollHeight;
+      return div;
     }
 
     function renderSide(session) {
@@ -368,6 +376,10 @@ HTML = r"""<!doctype html>
       const message = input.value.trim();
       if (!message) return;
       input.value = "";
+      const sendButton = qs("#composer button[type='submit']");
+      sendButton.disabled = true;
+      appendMessage({role: "user", content: message});
+      const pending = appendMessage({role: "assistant", content: "Agent 正在思考…", pending: true});
       qs("#status").textContent = "running";
       try {
         const data = await api("/api/chat", {
@@ -375,14 +387,21 @@ HTML = r"""<!doctype html>
           body: JSON.stringify({user_id: userId(), window_id: currentWindow, message})
         });
         lastTrace = data.trace || [];
+        pending.remove();
         await loadAll();
         currentTab = "trace";
         qs("#traceTab").classList.add("active");
         qs("#stateTab").classList.remove("active");
         await loadSession();
       } catch (error) {
+        pending.textContent = `assistant\n请求失败：${error.message}`;
+        pending.style.opacity = "1";
+        pending.classList.add("error");
         qs("#status").textContent = error.message;
         qs("#status").className = "status error";
+      } finally {
+        sendButton.disabled = false;
+        input.focus();
       }
     });
 
