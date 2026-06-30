@@ -2,6 +2,20 @@
 
 这是一个从零实现的最小 Agent Runtime。项目没有使用 LangGraph、OpenHands、OpenClaw 等现成 Agent 框架，主循环、工具注册、工具调用、session 管理、context 压缩、trace 日志都在本项目内实现。
 
+## 0. 提交物索引
+
+本仓库已按笔试要求整理好全部提交物：
+
+- 代码链接：<https://github.com/liangzhechen655/mini-agent-exam>
+- 运行说明与系统设计：本文件 `README.md`
+- 终端/网页操作录屏：`artifacts/demo-recording.mp4`
+- 架构设计题答案：`ARCHITECTURE_ANSWERS.md`
+- AI Prompt 与问题解决记录：`PROMPT_LOG.md`
+- 测试用例：`tests/`
+- 真实 LLM API 配置示例：`.env.example`
+
+说明：真实 API Key 只放在本地 `.env`，不会提交到仓库。
+
 ## 1. 运行环境
 
 - Python 3.10+
@@ -248,19 +262,12 @@ CLI 中输入 `/trace` 可以查看上一轮 trace。
 
 这样可以覆盖真实 LLM 调用、工具调用、多 session 隔离、追问、日志。
 
-## 11. 代码链接
+## 11. 代码链接与提交物
+
+GitHub 仓库：<https://github.com/liangzhechen655/mini-agent-exam>
 
 本地代码目录：`D:\mini-agent-exam`
 
-提交时建议新建 GitHub/Gitee 仓库，然后执行：
+录屏文件已放在 `artifacts/demo-recording.mp4`。由于视频文件较大，仓库使用 Git LFS 跟踪 `*.mp4` 文件。
 
-```powershell
-git init
-git add .
-git commit -m "implement minimal agent runtime"
-git branch -M main
-git remote add origin 你的仓库地址
-git push -u origin main
-```
-
-最终在答卷里填写仓库链接即可。
+最终在答卷里填写仓库链接即可，README、架构题答案、Prompt 记录、测试代码和录屏都在仓库内。
